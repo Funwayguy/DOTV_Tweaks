@@ -1,17 +1,24 @@
 package dotv.handlers;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import dotv.RespawnHandler;
 import dotv.core.DOTV;
 
 public class EventHandler
@@ -40,6 +47,22 @@ public class EventHandler
 	}
 	
 	@SubscribeEvent
+	public void onInteract(PlayerInteractEvent event)
+	{
+		if(event.action == Action.RIGHT_CLICK_BLOCK)
+		{
+			Block block = event.world.getBlock(event.x, event.y, event.z);
+			
+			if(block instanceof BlockBed && !event.world.isRemote)
+			{
+				event.entityPlayer.addChatComponentMessage(new ChatComponentText("Spawn Set"));
+				event.entityPlayer.setSpawnChunk(event.entityPlayer.getPlayerCoordinates(), true, event.entityPlayer.dimension);
+				event.setCanceled(true);
+			}
+		}
+	}
+	
+	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
         double d0 = event.entity.posY + (double)event.entity.getEyeHeight();
@@ -48,13 +71,43 @@ public class EventHandler
         int k = MathHelper.floor_double(event.entity.posZ);
         Block block = event.entity.worldObj.getBlock(i, j, k);
         
-		if(event.entityLiving instanceof EntityPlayer && block == Blocks.portal)
+        if(event.entityLiving instanceof EntityPlayer)
 		{
-			event.entityLiving.timeUntilPortal = event.entityLiving.getPortalCooldown();
+			EntityPlayer player = (EntityPlayer)event.entityLiving;
+			int respawnDim = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getInteger("Death_Dimension");
+			
+			if(respawnDim != 0 && respawnDim != player.worldObj.provider.dimensionId)
+			{
+				event.entityLiving.timeUntilPortal = event.entityLiving.getPortalCooldown();
+				RespawnHandler.RespawnPlayerInDimension(player, respawnDim);
+				return;
+			} else if(!player.capabilities.isCreativeMode && player.posY >= 255) // Nerf living above any dimension
+			{
+				player.attackEntityFrom(DamageSource.outOfWorld, 2F);
+			} else if(player.getBedLocation(player.dimension) != null && !player.isSpawnForced(player.dimension)) // Force player spawns even on broken beds. Prevents re-spawning on top of the world
+			{
+				player.setSpawnChunk(player.getBedLocation(player.dimension), true, player.dimension);
+			}
+			
+			if(block == Blocks.portal)
+			{
+				event.entityLiving.timeUntilPortal = event.entityLiving.getPortalCooldown();
+			}
 		} else if(event.entityLiving instanceof EntityDragon)
 		{
 			event.entityLiving.setDead();
 			return;
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerCopy(PlayerEvent.Clone event)
+	{
+		if(event.original.dimension == 0 && event.original.getHealth() > 0 && event.entityPlayer.dimension == 0)
+		{
+			NBTTagCompound pTags = event.entityPlayer.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+			pTags.setInteger("Death_Dimension", 0);
+			event.entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pTags);
 		}
 	}
 	
@@ -65,7 +118,17 @@ public class EventHandler
 		{
 			ChunkCoordinates coords = event.player.worldObj.provider.getSpawnPoint();
 			event.player.setPosition(coords.posX, coords.posY, coords.posZ);
-			return;
+			
+			NBTTagCompound pTags = event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+			pTags.setInteger("Death_Dimension", event.toDim);
+			event.player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pTags);
+			
+			coords = event.player.getBedLocation(event.player.worldObj.provider.dimensionId);
+			
+			if(coords == null)
+			{
+				event.player.setSpawnChunk(event.player.getPlayerCoordinates(), true, event.player.worldObj.provider.dimensionId);
+			}
 		}
 	}
 }
