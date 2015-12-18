@@ -1,0 +1,16 @@
+[
+{
+  "modid": "dotv",
+  "name": "DOTV Tweaks",
+  "description": "Custom set of tweaks for Dawn of the Void",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Funwayguy", "Darkosto"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
