@@ -1,6 +1,5 @@
 package dotv.core;
 
-import net.minecraft.block.Block;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 import cpw.mods.fml.common.Mod;
@@ -31,10 +30,6 @@ public class DOTV
 	public static CommonProxy proxy;
 	public SimpleNetworkWrapper network ;
 	public static Logger logger;
-	
-	public static Block decay;
-	public static Block voidTNT;
-	public static Block cleanseTNT;
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

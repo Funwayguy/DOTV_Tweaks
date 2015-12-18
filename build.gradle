@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 version = "DOTV_KEY"
 group= "dotv" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "DOTV Tweaks"
+archivesBaseName = "DOTV_Tweaks"
 
 minecraft {
     version = "1.7.10-10.13.4.1448-1.7.10"
