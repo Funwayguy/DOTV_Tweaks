@@ -5,6 +5,8 @@ import net.minecraft.block.BlockBed;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
@@ -20,6 +22,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import dotv.RespawnHandler;
 import dotv.core.DOTV;
+import dotv.core.DOTV_Settings;
 
 public class EventHandler
 {
@@ -75,6 +78,7 @@ public class EventHandler
 		{
 			EntityPlayer player = (EntityPlayer)event.entityLiving;
 			int respawnDim = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getInteger("Death_Dimension");
+			ItemStack item = player.getHeldItem();
 			
 			if(respawnDim != 0 && respawnDim != player.worldObj.provider.dimensionId)
 			{
@@ -89,7 +93,7 @@ public class EventHandler
 				player.setSpawnChunk(player.getBedLocation(player.dimension), true, player.dimension);
 			}
 			
-			if(block == Blocks.portal)
+			if(block == Blocks.portal || (player.worldObj.provider.dimensionId == DOTV_Settings.erebusDimID && (item == null || !Item.itemRegistry.getNameForObject(item.getItem()).equals(DOTV_Settings.erebusKeyName) || item.getItemDamage() != DOTV_Settings.erebusKeyMeta)))
 			{
 				event.entityLiving.timeUntilPortal = event.entityLiving.getPortalCooldown();
 			}

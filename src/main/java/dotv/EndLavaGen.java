@@ -39,7 +39,13 @@ public class EndLavaGen implements IWorldGenerator
 				
 				for(int k = 0; k < 16; k++)
 				{
-					ebs.func_150818_a(i, j & 15, k, Blocks.lava);
+					if(j == 0)
+					{
+						ebs.func_150818_a(i, j & 15, k, Blocks.lava);
+					} else
+					{
+						ebs.func_150818_a(i, j & 15, k, Blocks.bedrock);
+					}
 					ebs.setExtBlockMetadata(i, j & 15, k, 0);
 				}
 			}
