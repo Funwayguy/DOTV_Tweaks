@@ -10,18 +10,23 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class EndLavaGen implements IWorldGenerator
 {
+	boolean recursive = false;
+	
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
-		if(world.provider.dimensionId != 1)
+		if(world.isRemote || world.provider.dimensionId != 1 || recursive)
 		{
 			return;
 		}
+		
+		recursive = true;
 		
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		
 		if(chunk == null)
 		{
+			recursive = false;
 			return;
 		}
 		
@@ -50,5 +55,7 @@ public class EndLavaGen implements IWorldGenerator
 				}
 			}
 		}
+		
+		recursive = false;
 	}
 }

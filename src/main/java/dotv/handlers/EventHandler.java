@@ -39,14 +39,6 @@ public class EventHandler
 	@SubscribeEvent
 	public void onEntitySpawn(EntityJoinWorldEvent event)
 	{
-		if(event.entity instanceof EntityPlayer && !event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
-		{
-			NBTTagCompound pTags = event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-			pTags.setBoolean("DOTV_START", true);
-			event.entity.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pTags);
-			event.entity.travelToDimension(1);
-			return;
-		}
 	}
 	
 	@SubscribeEvent
@@ -76,6 +68,15 @@ public class EventHandler
         
         if(event.entityLiving instanceof EntityPlayer)
 		{
+        	if(event.entityLiving.ticksExisted == 1 && !event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
+        	{
+        		NBTTagCompound pTags = event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+    			pTags.setBoolean("DOTV_START", true);
+    			event.entity.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pTags);
+    			event.entity.travelToDimension(1);
+    			return;
+        	}
+        	
 			EntityPlayer player = (EntityPlayer)event.entityLiving;
 			int respawnDim = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getInteger("Death_Dimension");
 			ItemStack item = player.getHeldItem();
@@ -120,7 +121,7 @@ public class EventHandler
 	{
 		if(event.player.getHealth() > 0 && event.toDim == 0)
 		{
-			ChunkCoordinates coords = event.player.worldObj.provider.getSpawnPoint();
+			ChunkCoordinates coords = event.player.worldObj.provider.getEntrancePortalLocation();
 			event.player.setPosition(coords.posX, coords.posY, coords.posZ);
 			
 			NBTTagCompound pTags = event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
