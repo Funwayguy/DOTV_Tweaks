@@ -68,7 +68,7 @@ public class EventHandler
         
         if(event.entityLiving instanceof EntityPlayer)
 		{
-        	if(event.entityLiving.ticksExisted == 1 && !event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
+        	if(event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
         	{
         		NBTTagCompound pTags = event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
     			pTags.setBoolean("DOTV_START", true);
