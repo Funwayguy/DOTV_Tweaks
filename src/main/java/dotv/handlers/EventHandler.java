@@ -68,14 +68,14 @@ public class EventHandler
         
         if(event.entityLiving instanceof EntityPlayer)
 		{
-        	if(event.entity.ticksExisted >= 1 && event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
+        	/*if(event.entity.ticksExisted >= 1 && event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
         	{
         		NBTTagCompound pTags = event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
     			pTags.setBoolean("DOTV_START", true);
     			event.entity.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pTags);
     			event.entity.travelToDimension(1);
     			return;
-        	}
+        	}*/
         	
 			EntityPlayer player = (EntityPlayer)event.entityLiving;
 			int respawnDim = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getInteger("Death_Dimension");
