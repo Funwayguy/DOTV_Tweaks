@@ -68,25 +68,25 @@ public class EventHandler
         
         if(event.entityLiving instanceof EntityPlayer)
 		{
-        	if(event.entity.ticksExisted >= 1 && !event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
+        	/*if(event.entity.ticksExisted >= 1 && !event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("DOTV_START"))
         	{
         		NBTTagCompound pTags = event.entity.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
     			pTags.setBoolean("DOTV_START", true);
     			event.entity.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pTags);
     			event.entity.travelToDimension(1);
     			return;
-        	}
+        	}*/
         	
 			EntityPlayer player = (EntityPlayer)event.entityLiving;
-			int respawnDim = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getInteger("Death_Dimension");
+			//int respawnDim = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getInteger("Death_Dimension");
 			ItemStack item = player.getHeldItem();
 			
-			if(respawnDim != 0 && respawnDim != player.worldObj.provider.dimensionId)
+			/*if(respawnDim != 0 && respawnDim != player.worldObj.provider.dimensionId)
 			{
 				event.entityLiving.timeUntilPortal = event.entityLiving.getPortalCooldown();
 				RespawnHandler.RespawnPlayerInDimension(player, respawnDim);
 				return;
-			} else if(!player.capabilities.isCreativeMode && player.posY >= 255) // Nerf living above any dimension
+			} else */if(!player.capabilities.isCreativeMode && player.posY >= 255) // Nerf living above any dimension
 			{
 				player.attackEntityFrom(DamageSource.outOfWorld, 2F);
 			} else if(player.getBedLocation(player.dimension) != null && !player.isSpawnForced(player.dimension)) // Force player spawns even on broken beds. Prevents re-spawning on top of the world
@@ -105,7 +105,7 @@ public class EventHandler
 		}
 	}
 	
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onPlayerCopy(PlayerEvent.Clone event)
 	{
 		if(event.original.dimension == 0 && event.original.getHealth() > 0 && event.entityPlayer.dimension == 0)
@@ -114,9 +114,9 @@ public class EventHandler
 			pTags.setInteger("Death_Dimension", 0);
 			event.entityPlayer.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, pTags);
 		}
-	}
+	}*/
 	
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onDimensionChange(PlayerChangedDimensionEvent event)
 	{
 		if(event.player.getHealth() > 0 && event.toDim == 0)
@@ -135,5 +135,5 @@ public class EventHandler
 				event.player.setSpawnChunk(event.player.getPlayerCoordinates(), true, event.player.worldObj.provider.dimensionId);
 			}
 		}
-	}
+	}*/
 }
