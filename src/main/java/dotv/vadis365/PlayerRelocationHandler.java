@@ -29,7 +29,7 @@ public class PlayerRelocationHandler
 				{//may need other dimensions black listed to enable their portals
 					player.mcServer.getConfigurationManager().transferPlayerToDimension(player, dimension, new RespawnTestTeleporter(world2));
 					if(dimension == 1)
-						player.playerNetServerHandler.setPlayerLocation(100D, 49.25D, 0D, 0F, 0F); // Default end spawn co-ord (will need to change)
+						player.playerNetServerHandler.setPlayerLocation(100D, 63.25D, 0D, 0F, 0F); // Default end spawn co-ord (will need to change)
 					player.getEntityData().setBoolean("DO_RESPAWN", false);
 				}
 			}
