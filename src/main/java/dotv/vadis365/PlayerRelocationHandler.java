@@ -25,7 +25,7 @@ public class PlayerRelocationHandler
 			{
 				int dimension = player.getEntityData().getInteger("DEATH_DIMENSION");
 				WorldServer world2 = DimensionManager.getWorld(dimension);
-				if(player.dimension != dimension && dimension != DOTV_Settings.erebusDimID && dimension != 0)
+				if(player.dimension != dimension && dimension != 66 && dimension != DOTV_Settings.erebusDimID && dimension != 0)
 				{//may need other dimensions black listed to enable their portals
 					player.mcServer.getConfigurationManager().transferPlayerToDimension(player, dimension, new RespawnTestTeleporter(world2));
 					if(dimension == 1)
