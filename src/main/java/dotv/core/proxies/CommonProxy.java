@@ -15,13 +15,6 @@ public class CommonProxy
 	
 	public void registerHandlers()
 	{
-		// Vadis respawn stuffs
-		//FMLCommonHandler.instance().bus().register(new EndPlayerLoggedInEvent());
-		//MinecraftForge.EVENT_BUS.register(new PlayerRespawnNBTHandler());
-		//MinecraftForge.EVENT_BUS.register(new EntityDeathDimensionHandler());
-		//MinecraftForge.EVENT_BUS.register(new PlayerRelocationHandler());
-		
-		// Funwayguy pack tweaks
 		EventHandler handler = new EventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);
 		FMLCommonHandler.instance().bus().register(handler);

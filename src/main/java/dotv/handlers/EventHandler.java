@@ -134,7 +134,7 @@ public class EventHandler
 				event.player.setPosition(coords.posX, coords.posY, coords.posZ);
 			} else if(event.toDim == DOTV_Settings.erebusDimID)
 			{
-				event.player.inventory.clearInventory(Items.diamond_pickaxe, 1);
+				event.player.inventory.clearInventory(Items.diamond_pickaxe, -1);
 			}
 			
 			RespawnData.getData(event.player).lastDim = event.toDim;
