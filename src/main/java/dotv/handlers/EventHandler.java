@@ -82,7 +82,7 @@ public class EventHandler
 				event.entityLiving.timeUntilPortal = event.entityLiving.getPortalCooldown();
 				RespawnHandler.RespawnPlayerInDimension(player, respawnDim);
 				return;
-			} else if(!player.capabilities.isCreativeMode && player.posY >= 255) // Nerf living above any dimension
+			} else if(!player.capabilities.isCreativeMode && player.posY >= 255 && !(player.worldObj.provider.dimensionId == 0 || player.worldObj.provider.dimensionId == 1))
 			{
 				player.attackEntityFrom(DamageSource.outOfWorld, 2F);
 			} else if(player.getBedLocation(player.dimension) != null && !player.isSpawnForced(player.dimension)) // Force player spawns even on broken beds. Prevents re-spawning on top of the world
