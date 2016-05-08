@@ -2,6 +2,7 @@ package dotv.handlers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -9,16 +10,20 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import dotv.RespawnData;
@@ -144,5 +149,16 @@ public class EventHandler
 				event.player.setSpawnChunk(event.player.getPlayerCoordinates(), true, event.player.worldObj.provider.dimensionId);
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event)
+	{
+		if(event.world.isRemote || !DOTV.proxy.isClient())
+		{
+			return;
+		}
+		
+		ObfuscationReflectionHelper.setPrivateValue(WorldInfo.class, event.world.getWorldInfo(), true, "field_76110_t", "allowCommands");
 	}
 }
