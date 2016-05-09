@@ -2,7 +2,6 @@ package dotv.handlers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -10,7 +9,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
@@ -154,11 +152,20 @@ public class EventHandler
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event)
 	{
-		if(event.world.isRemote || !DOTV.proxy.isClient())
+		if(event.world.isRemote)
 		{
 			return;
 		}
 		
+		// All servers
+		event.world.getGameRules().setOrCreateGameRule("tfEnforcedProgression", "false");
+		
+		if(!DOTV.proxy.isClient())
+		{
+			return;
+		}
+		
+		// Internal servers only
 		ObfuscationReflectionHelper.setPrivateValue(WorldInfo.class, event.world.getWorldInfo(), true, "field_76110_t", "allowCommands");
 	}
 }
